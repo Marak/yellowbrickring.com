@@ -8,7 +8,8 @@
 		"api": "NODE_ENV=development wrangler dev --ip=0.0.0.0 --local-protocol=http --port=3000 --persist-to=./r1.data",
 		"start": "npm run dev",
 		"test": "vitest",
-		"migrate": "NODE_ENV=development wrangler d1 execute yellowbrickring_db --file=./migrations/migration_0.sql --local --persist-to=./r1.data"
+		"migrate": "NODE_ENV=development wrangler d1 execute yellowbrickring_db --file=./migrations/migration_0.sql --local --persist-to=./r1.data",
+		"migrate-server": "wrangler d1 execute yellowbrickring_db --file=./migrations/migration_0.sql --remote"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.8.19",

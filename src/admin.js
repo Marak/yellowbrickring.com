@@ -4,11 +4,14 @@ import { basicAuth } from 'hono/basic-auth'
 
 const admin = new Hono()
 
-// ✅ Protect all routes under admin using basic auth
-admin.use('*', basicAuth({
-  username: 'admin',
-  password: 'admin', // 🔐 Replace with env or config in prod
-}))
+// ✅ Protect all routes under admin using basic auth with environment variables
+admin.use('*', async (c, next) => {
+  const auth = basicAuth({
+    username: c.env.ADMIN_USERNAME || 'admin',
+    password: c.env.ADMIN_PASSWORD || 'admin',
+  })
+  return await auth(c, next)
+});
 
 // Show all pending submissions
 admin.get('/submissions', async (c) => {
