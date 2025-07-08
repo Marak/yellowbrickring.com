@@ -6,8 +6,3 @@ npm install
 ```dev
 npm run dev
 ```
-
-*Start just vite public HTTP server without API*
-```dev
-npm start
-```

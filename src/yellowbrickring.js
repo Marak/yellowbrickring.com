@@ -100,6 +100,12 @@ app.post('/submit', async (c) => {
   // Example: store in KV or Durable Object
   console.log(`[Submit] New site submission:`, body)
   return c.text('Thanks for submitting!')
-})
+});
+
+
+app.all('*', (c) => {
+ return c.env.ASSETS.fetch(c.req.raw);
+});
+
 
 export default app
