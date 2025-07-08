@@ -51,14 +51,44 @@ app.get('/prev/:id', async (c) => {
 	return c.redirect(prev.url)
 })
 
-// Redirect to random site
+// Redirect to random site, excluding the originating site based on Origin/Referer
 app.get('/random', async (c) => {
-	const sites = await getSiteList(c)
-	if (sites.length === 0) return c.text('No sites available', 404)
+  const sites = await getSiteList(c)
+  if (sites.length === 0) return c.text('No sites available', 404)
 
-	const site = sites[Math.floor(Math.random() * sites.length)]
-	await logNavigation('random', null, site.id, c)
-	return c.redirect(site.url)
+  let fromId = null
+  let availableSites = sites
+
+  // Try to get the origin from Origin or Referer header
+  const originHeader = c.req.header('Origin') || c.req.header('Referer')
+  if (originHeader) {
+    try {
+      // Parse the URL to extract the hostname
+      const originUrl = new URL(originHeader)
+      const originDomain = originUrl.hostname
+      // Find the site in the database that matches the domain
+      const originSite = sites.find(site => {
+        try {
+          const siteUrl = new URL(site.url)
+          return siteUrl.hostname === originDomain
+        } catch {
+          return false
+        }
+      })
+      if (originSite) {
+        fromId = originSite.id
+        // Exclude the originating site
+        availableSites = sites.filter(site => site.id !== fromId)
+        if (availableSites.length === 0) return c.text('No other sites available', 404)
+      }
+    } catch (e) {
+      console.warn('[Error parsing Origin/Referer]', e)
+    }
+  }
+
+  const site = availableSites[Math.floor(Math.random() * availableSites.length)]
+  await logNavigation('random', fromId || null, site.id, c)
+  return c.redirect(site.url)
 })
 
 app.get('/webring', async (c) => {
