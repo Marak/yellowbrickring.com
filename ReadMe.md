@@ -2,7 +2,12 @@
 npm install
 ```
 
+*Bootstrap local env with databases*
+```bash
+npm run migrate
+```
+
 *Start dev server with API*
-```dev
+```bash
 npm run dev
 ```
