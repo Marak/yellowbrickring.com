@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🌻 Admin Panel – Yellow Brick Ring</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #fffbe6;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+      color: #333;
+    }
+
+    h1 {
+      color: #dca100;
+      margin-bottom: 2rem;
+    }
+
+    .site-card {
+      background: #fff9d6;
+      border: 2px dashed #ffd700;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.4rem 0.8rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .remove {
+      background: #f7b5b5;
+      color: #900;
+    }
+
+    ul {
+      margin-top: 0.5rem;
+      padding-left: 1.2rem;
+    }
+
+    code {
+      background: #fdf6d0;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    a {
+      color: #b87b00;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌻 Yellow Brick Ring Admin Panel</h1>
+  <div id="site-list">Loading...</div>
+
+  <script>
+    async function loadSites() {
+      const res = await fetch('/admin/sites')
+      const sites = await res.json()
+      const container = document.getElementById('site-list')
+      container.innerHTML = ''
+
+      if (!sites.length) {
+        container.innerHTML = '<p>No approved sites yet.</p>'
+        return
+      }
+
+      for (const site of sites) {
+        const div = document.createElement('div')
+        div.className = 'site-card'
+        div.innerHTML = `
+          <div class="site-header">
+            <strong>${site.name}</strong>
+            <button class="btn remove">Remove</button>
+          </div>
+          <p><a href="${site.url}" target="_blank">${site.url}</a></p>
+          <p><strong>ID:</strong> <code>${site.id}</code></p>
+          <p><strong>Total Visits:</strong> ${site.totalVisits}</p>
+          <div><strong>Top Referrers:</strong>
+            <ul>
+              ${site.referrals.map(r => `<li>${r.referrer_id} (${r.count})</li>`).join('')}
+            </ul>
+          </div>
+        `
+        div.querySelector('.remove').onclick = async () => {
+          if (confirm(`Are you sure you want to remove ${site.id}?`)) {
+            await fetch('/admin/remove/' + site.id, { method: 'POST' })
+            div.remove()
+          }
+        }
+        container.appendChild(div)
+      }
+    }
+
+    loadSites()
+  </script>
+</body>
+</html>

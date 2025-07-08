@@ -1,6 +1,6 @@
 // yellowBrickRing.js
 export default function yellowBrickRing (app) {
-  const apiUrl = '.' // or use https://yellowbrickring.com in production
+  const apiUrl = '' // or use https://yellowbrickring.com in production
 
   const client = {
     // Fetch the full list of sites
@@ -18,7 +18,7 @@ export default function yellowBrickRing (app) {
     // Submit a new site (stub for now)
     async submitSite(site) {
       try {
-        const res = await fetch(`${apiUrl}/submit`, {
+        const res = await fetch(`${apiUrl}/submit-site`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(site)
