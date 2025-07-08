@@ -12,7 +12,7 @@
         return
       }
 
-      const apiUrl = window.yellowBrickRingApiUrl || window.location.origin
+      const apiUrl = window.yellowBrickRingApiUrl || 'https://yellowbrickring.com'
 
       try {
         const res = await fetch(`${apiUrl}/sites.json`)
