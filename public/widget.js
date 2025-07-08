@@ -3,6 +3,8 @@
     constructor() {
       super()
       this.attachShadow({ mode: 'open' })
+
+      this.size = this.getAttribute('size') || 'full'
     }
 
     async connectedCallback() {
@@ -25,37 +27,73 @@
           return
         }
 
-        const prev = sites[(index - 1 + sites.length) % sites.length]
-        const next = sites[(index + 1) % sites.length]
         const randomUrl = `${apiUrl}/webring?from=${siteId}&to=random`
 
-        this.shadowRoot.innerHTML = `
-          <style>
-            .webring {
-              font-family: sans-serif;
-              background: #fff9d6;
-              border: 1px solid #ffd700;
-              padding: 0.5rem 1rem;
-              display: inline-block;
-              font-size: 0.9rem;
-              border-radius: 6px;
-            }
-            .webring a {
-              color: #b87b00;
-              text-decoration: none;
-              margin: 0 0.4rem;
-            }
-            .webring a:hover {
-              text-decoration: underline;
-            }
-          </style>
-          <div class="webring">
-            <a href="${apiUrl}/webring?from=${siteId}&to=prev">← Prev</a> |
-            Part of <strong>Yellow Brick Ring</strong> |
-            <a href="${apiUrl}/webring?from=${siteId}&to=next">Next →</a> |
-            <a href="${randomUrl}">🎲 Random</a>
-          </div>
-        `
+        if(this.size === 'full') {
+          this.shadowRoot.innerHTML = `
+            <style>
+              .webring {
+                font-family: sans-serif;
+                background: var(--ybr-background-color, #fff9d6);
+                border: 1px solid var(--ybr-border-color, #ffd700); 
+                color: var(--ybr-text-color, #000); 
+                padding: 0.5rem 1rem;
+                display: inline-block;
+                font-size: 0.9rem;
+                border-radius: 6px;
+              }
+              .webring a {
+                color: var(--ybr-link-color, #b87b00);
+                text-decoration: none;
+                margin: 0 0.4rem;
+              }
+              .webring a:hover {
+                text-decoration: underline;
+              }
+            </style>
+            <div class="webring">
+              <a href="${apiUrl}/webring?from=${siteId}&to=prev">← Prev</a> |
+              Part of <strong><a href="${apiUrl}">Yellow Brick Ring</a></strong> |
+              <a href="${apiUrl}/webring?from=${siteId}&to=next">Next →</a> |
+              <a href="${randomUrl}">🎲 Random</a>
+            </div>
+          `
+        } else if(this.size === 'compact') {
+          this.shadowRoot.innerHTML = `
+            <style>
+              .webring {
+                font-family: sans-serif;
+                background: var(--ybr-background-color, #fff9d6);
+                border: 1px solid var(--ybr-border-color, #ffd700); 
+                color: var(--ybr-text-color, #000); 
+                padding: 0.5rem;
+                display: inline-flex;
+                font-size: 0.9rem;
+                border-radius: 6px;
+
+
+              }
+              .webring a {
+                color: var(--ybr-link-color, #b87b00);
+                text-decoration: none;
+                margin: 0 0.4rem;
+              }
+              .webring a:hover {
+                text-decoration: underline;
+              }
+            </style>
+            <div class="webring">
+              <a href="${apiUrl}"><strong>YBR</strong></a>
+              <a href="${apiUrl}/webring?from=${siteId}&to=prev">Prev</a> |
+              <a href="${apiUrl}/webring?from=${siteId}&to=next">Next</a> |
+              <a href="${randomUrl}">Rand</a>
+            </div>
+          `
+        } else {
+          console.error('[YellowBrickRing Widget]', 'invalid "size" attribute')
+          this.renderError('Failed to load webring widget')
+        }
+        
       } catch (err) {
         console.error('[YellowBrickRing Widget]', err)
         this.renderError('Failed to load webring widget')
