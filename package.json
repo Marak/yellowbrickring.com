@@ -4,13 +4,17 @@
 	"private": true,
 	"scripts": {
 		"deploy": "wrangler deploy",
-		"dev": "wrangler dev",
-		"start": "wrangler dev",
+		"dev": "npm run api & vite --host --port 3000",
+		"api": "NODE_ENV=development wrangler dev --ip=0.0.0.0 --local-protocol=http --port=3001 --persist-to=../r1.data",
+		"start": "vite --host --port 3000",
 		"test": "vitest"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.8.19",
 		"vitest": "~3.2.0",
 		"wrangler": "^4.23.0"
+	},
+	"dependencies": {
+		"hono": "^4.8.4"
 	}
 }

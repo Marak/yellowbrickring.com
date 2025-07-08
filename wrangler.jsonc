@@ -5,7 +5,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "yellowbrickring",
-	"main": "src/index.js",
+	"main": "src/yellowbrickring.js",
 	"compatibility_date": "2025-07-05",
 	"observability": {
 		"enabled": true

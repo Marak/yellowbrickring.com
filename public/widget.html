@@ -1,0 +1,15 @@
+<div id="webring-widget">
+  <a id="prev-link" href="#">← Prev</a> |
+  <a id="next-link" href="#">Next →</a> |
+  <a id="random-link" href="#">🎲</a>
+</div>
+
+<script>
+  const siteId = 'codyq.dev' // This site’s ID, hard-coded or injected
+
+  const base = 'https://ring.buddypond.com/webring'
+
+  document.getElementById('prev-link').href = `${base}?from=${siteId}&to=prev`
+  document.getElementById('next-link').href = `${base}?from=${siteId}&to=next`
+  document.getElementById('random-link').href = `${base}?to=random`
+</script>
