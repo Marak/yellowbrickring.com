@@ -6,9 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yellow Brick Ring 🌻</title>
     <link rel="stylesheet" href="/styles.css" />
+    <script>
+        // check if origin is not yellowbrickring.com, if so set window.yellowBrickRingApiUrl to origin
+        if (window.location.origin !== 'https://yellowbrickring.com') {
+            window.yellowBrickRingApiUrl = window.location.origin;
+        }
+    </script>
     <script src="./widget.js"></script>
-
-
 </head>
 
 <body>
