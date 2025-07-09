@@ -73,25 +73,32 @@ admin.get('/analytics/:id', async (c) => {
     })
 })
 
-// Approve submission
 admin.post('/approve/:id', async (c) => {
-    const db = c.env.YELLOWBRICKRING_DB
-    const id = c.req.param('id')
+	const db = c.env.YELLOWBRICKRING_DB
+	const submissionId = c.req.param('id')
 
-    const submission = await db.prepare(`
-    SELECT * FROM submissions WHERE id = ? AND status = 'pending'
-  `).bind(id).first()
+	const submission = await db.prepare(`
+		SELECT * FROM submissions WHERE id = ?
+	`).bind(submissionId).first()
 
-    if (!submission) return c.text('Submission not found.', 404)
+	if (!submission) return c.text('Submission not found', 404)
 
-    await db.prepare(`INSERT INTO sites (id, name, url) VALUES (?, ?, ?)`)
-        .bind(submission.domain, submission.name, submission.url).run()
+	// Get next order_index
+	const row = await db.prepare(`SELECT COALESCE(MAX(order_index), 0) + 1 as next_order FROM sites`).first()
+	const nextOrder = row?.next_order ?? 0
 
-    await db.prepare(`UPDATE submissions SET status = 'approved' WHERE id = ?`)
-        .bind(id).run()
+	// Insert into sites with proper order_index
+	await db.prepare(`
+		INSERT INTO sites (id, name, url, order_index)
+		VALUES (?, ?, ?, ?)
+	`).bind(submission.domain, submission.name, submission.url, nextOrder).run()
 
-    return c.text('Approved!')
+	// Mark submission as approved
+	await db.prepare(`UPDATE submissions SET status = 'approved' WHERE id = ?`).bind(submissionId).run()
+
+	return c.text('✅ Site approved and added to ring!')
 })
+
 
 // Deny submission
 admin.post('/deny/:id', async (c) => {

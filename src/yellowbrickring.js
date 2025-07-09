@@ -58,6 +58,7 @@ app.get('/random', async (c) => {
 	let availableSites = sites
 
 	const originHeader = c.req.header('Origin') || c.req.header('Referer')
+
 	if (originHeader) {
 		try {
 			const originUrl = new URL(originHeader)
@@ -93,7 +94,7 @@ app.get('/random', async (c) => {
 app.get('/webring', async (c) => {
 	const sites = await getSiteList(c)
 	const from = c.req.query('from')
-	const to = c.req.query('to') || 'next'
+	const to = (c.req.query('to') || 'next').toLowerCase()
 
 	const index = findIndex(sites, from)
 	const fromIsValid = index !== -1
@@ -109,7 +110,9 @@ app.get('/webring', async (c) => {
 		target = sites[(startIndex - 1 + sites.length) % sites.length]
 		await logNavigation('prev', from, target.id, c)
 	} else if (to === 'random') {
-		target = sites[Math.floor(Math.random() * sites.length)]
+		// ensure that from is removed from the random selection
+		const availableSites = fromIsValid ? sites.filter(site => site.id !== from) : sites
+		target = availableSites[Math.floor(Math.random() * availableSites.length)]
 		await logNavigation('random', from, target.id, c)
 	} else {
 		return c.text('Invalid navigation direction', 400)
