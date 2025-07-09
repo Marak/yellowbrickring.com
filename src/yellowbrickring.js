@@ -31,30 +31,21 @@ app.get('/next/:id', async (c) => {
 	const index = findIndex(sites, id)
 
 	const fallbackIndex = 0
-	const fromId = index !== -1 ? id : null
 	const next = sites[(index !== -1 ? index + 1 : fallbackIndex + 1) % sites.length]
 
-	if (fromId) {
-		await logNavigation('next', fromId, next.id, c)
-	}
-
+	await logNavigation('next', id, next.id, c) // always log, even if `id` is not in `sites`
 	return c.redirect(next.url)
 })
 
-// Redirect to previous site
 app.get('/prev/:id', async (c) => {
 	const sites = await getSiteList(c)
 	const { id } = c.req.param()
 	const index = findIndex(sites, id)
 
 	const fallbackIndex = 0
-	const fromId = index !== -1 ? id : null
 	const prev = sites[(index !== -1 ? index - 1 + sites.length : fallbackIndex - 1 + sites.length) % sites.length]
 
-	if (fromId) {
-		await logNavigation('prev', fromId, prev.id, c)
-	}
-
+	await logNavigation('prev', id, prev.id, c)
 	return c.redirect(prev.url)
 })
 
@@ -99,7 +90,6 @@ app.get('/random', async (c) => {
 	return c.redirect(site.url)
 })
 
-
 app.get('/webring', async (c) => {
 	const sites = await getSiteList(c)
 	const from = c.req.query('from')
@@ -113,27 +103,20 @@ app.get('/webring', async (c) => {
 	if (to === 'next') {
 		const startIndex = fromIsValid ? index : 0
 		target = sites[(startIndex + 1) % sites.length]
-		if (fromIsValid) {
-			await logNavigation('next', from, target.id, c)
-		}
+		await logNavigation('next', from, target.id, c)
 	} else if (to === 'prev') {
 		const startIndex = fromIsValid ? index : 0
 		target = sites[(startIndex - 1 + sites.length) % sites.length]
-		if (fromIsValid) {
-			await logNavigation('prev', from, target.id, c)
-		}
+		await logNavigation('prev', from, target.id, c)
 	} else if (to === 'random') {
 		target = sites[Math.floor(Math.random() * sites.length)]
-		if (fromIsValid) {
-			await logNavigation('random', from, target.id, c)
-		}
+		await logNavigation('random', from, target.id, c)
 	} else {
 		return c.text('Invalid navigation direction', 400)
 	}
 
 	return c.redirect(target.url)
 })
-
 
 app.post('/submit-site', async (c) => {
 	const db = c.env.YELLOWBRICKRING_DB
