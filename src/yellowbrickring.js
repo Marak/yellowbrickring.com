@@ -120,7 +120,9 @@ app.get('/webring', async (c) => {
 
 app.post('/submit-site', async (c) => {
 	const db = c.env.YELLOWBRICKRING_DB
-	const ip = c.req.header('cf-connecting-ip') || 'unknown'
+	
+    const ip = c.req.raw.headers.get("CF-Connecting-IP") || c.req.raw.headers.get("x-real-ip") || c.req.raw.headers.get("x-forwarded-for") || 'unknown';
+
 	const { domain, name, url } = await c.req.json()
 
 	if (!domain || !name || !url || !url.startsWith('http')) {
