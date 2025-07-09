@@ -126,7 +126,11 @@
 
       try {
         const response = await app.ring.submitSite({ domain, name, url })
-        result.textContent = '✅ Submission received!'
+        if (typeof response === 'string') {
+          result.textContent = response // handle string responses directly
+        } else {
+          result.textContent = 'An unexpected error occurred. Please try again later.'
+        }
         form.reset()
       } catch (err) {
         console.error(err)

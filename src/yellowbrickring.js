@@ -145,7 +145,7 @@ app.post('/submit-site', async (c) => {
     VALUES (?, ?, ?, ?)
   `).bind(ip, domain, name, url).run()
 
-	return c.text('Thanks for submitting! Your site will be reviewed.')
+	return c.text('✅ Thanks for submitting! Your site will be reviewed.')
 })
 
 //
