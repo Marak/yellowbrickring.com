@@ -63,3 +63,25 @@ a {
 .btn:hover {
     background: #f0c800;
 }
+
+.code-block {
+  position: relative;
+  margin-bottom: 1em;
+}
+
+.copy-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: #ffd700;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: #ffcc00;
+}

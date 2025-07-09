@@ -1,0 +1,25 @@
+---
+business:
+  icons:
+    - copy
+  label: Business
+design:
+  icons:
+    - copy
+  label: Design
+editing:
+  icons:
+    - check
+  label: Editing
+files:
+  icons:
+    - copy
+  label: Files
+punctuation-symbols:
+  icons:
+    - check
+  label: Punctuation + Symbols
+text-formatting:
+  icons:
+    - check
+  label: Text Formatting

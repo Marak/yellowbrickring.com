@@ -1,0 +1,158 @@
+{
+  "check": {
+    "aliases": {
+      "unicodes": {
+        "composite": [
+          "2713",
+          "2714"
+        ],
+        "secondary": [
+          "10f00c"
+        ]
+      }
+    },
+    "changes": [
+      "1.0.0",
+      "5.0.0",
+      "6.0.0-beta1",
+      "6.0.0",
+      "6.2.0",
+      "6.3.0",
+      "6.4.0",
+      "6.5.0",
+      "6.6.0",
+      "6.7.0"
+    ],
+    "familyStylesByLicense": {
+      "free": [
+        {
+          "family": "classic",
+          "style": "solid"
+        }
+      ],
+      "pro": [
+        {
+          "family": "classic",
+          "style": "solid"
+        }
+      ]
+    },
+    "label": "Check",
+    "ligatures": [],
+    "search": {
+      "terms": [
+        "Check Mark",
+        "accept",
+        "agree",
+        "check",
+        "check mark",
+        "checkmark",
+        "confirm",
+        "correct",
+        "coupon",
+        "done",
+        "enable",
+        "mark",
+        "notice",
+        "notification",
+        "notify",
+        "ok",
+        "select",
+        "success",
+        "tick",
+        "todo",
+        "true",
+        "validate",
+        "working",
+        "yes",
+        "✓"
+      ]
+    },
+    "svgs": {
+      "classic": {
+        "solid": {
+          "height": 512,
+          "lastModified": 1717158660,
+          "path": "M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z",
+          "raw": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448 512\"><path d=\"M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z\"/></svg>",
+          "viewBox": [
+            0,
+            0,
+            448,
+            512
+          ],
+          "width": 448
+        }
+      }
+    },
+    "unicode": "f00c",
+    "voted": false
+  },
+  "copy": {
+    "aliases": {
+      "unicodes": {
+        "secondary": [
+          "10f0c5"
+        ]
+      }
+    },
+    "changes": [
+      "2.0.0",
+      "5.0.0",
+      "5.10.2",
+      "6.0.0-beta1",
+      "6.2.0",
+      "6.3.0",
+      "6.4.0",
+      "6.4.1",
+      "6.5.0",
+      "6.6.0",
+      "6.7.0"
+    ],
+    "familyStylesByLicense": {
+      "free": [
+        {
+          "family": "classic",
+          "style": "solid"
+        }
+      ],
+      "pro": [
+        {
+          "family": "classic",
+          "style": "solid"
+        }
+      ]
+    },
+    "label": "Copy",
+    "ligatures": [],
+    "search": {
+      "terms": [
+        "clone",
+        "duplicate",
+        "file",
+        "files-o",
+        "paper",
+        "paste"
+      ]
+    },
+    "svgs": {
+      "classic": {
+        "solid": {
+          "height": 512,
+          "lastModified": 1717101930,
+          "path": "M208 0L332.1 0c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9L448 336c0 26.5-21.5 48-48 48l-192 0c-26.5 0-48-21.5-48-48l0-288c0-26.5 21.5-48 48-48zM48 128l80 0 0 64-64 0 0 256 192 0 0-32 64 0 0 48c0 26.5-21.5 48-48 48L48 512c-26.5 0-48-21.5-48-48L0 176c0-26.5 21.5-48 48-48z",
+          "raw": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448 512\"><path d=\"M208 0L332.1 0c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9L448 336c0 26.5-21.5 48-48 48l-192 0c-26.5 0-48-21.5-48-48l0-288c0-26.5 21.5-48 48-48zM48 128l80 0 0 64-64 0 0 256 192 0 0-32 64 0 0 48c0 26.5-21.5 48-48 48L48 512c-26.5 0-48-21.5-48-48L0 176c0-26.5 21.5-48 48-48z\"/></svg>",
+          "viewBox": [
+            0,
+            0,
+            448,
+            512
+          ],
+          "width": 448
+        }
+      }
+    },
+    "unicode": "f0c5",
+    "voted": false
+  }
+}

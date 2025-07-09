@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yellow Brick Ring 🌻</title>
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/vendor/font-awesome/css/fontawesome.css" />
+    <link rel="stylesheet" href="/vendor/font-awesome/css/all.min.css" />
     <script>
         // check if origin is not yellowbrickring.com, if so set window.yellowBrickRingApiUrl to origin
         if (window.location.origin !== 'https://yellowbrickring.com') {
@@ -30,15 +32,17 @@
 
     <section>
         <h2>🔗 Live Widget Preview</h2>
-          <webring-widget site-id="yellowbrickring.com"></webring-widget>
+        <webring-widget site-id="yellowbrickring.com"></webring-widget>
     </section>
 
     <section id="join">
         <h2>🌟 Add to Your Site</h2>
         <p>To include the ring on your site, just copy and paste this snippet into your HTML:</p>
-        <pre><code>&lt;script src="https://yellowbrickring.com/widget.js" defer&gt;&lt;/script&gt;
+        <div class="code-block">
+            <button class="copy-btn" title="Copy to clipboard"><i class="fa-solid fa-copy"></i></button>
+            <pre><code>&lt;script src="https://yellowbrickring.com/widget.js" defer&gt;&lt;/script&gt;
 &lt;webring-widget site-id="yourdomain.com"&gt;&lt;/webring-widget&gt;</code></pre>
-
+        </div>
         <p>Make sure to replace <code>yourdomain.com</code> with your actual site ID (usually your domain).</p>
     </section>
 
@@ -46,15 +50,17 @@
         <h2>🛠 Use the API (No JS Widget)</h2>
         <p>If you'd prefer not to use JavaScript, you can still participate in the Yellow Brick Ring by adding simple
             HTML links like this:</p>
-        <pre><code>&lt;a href="https://yellowbrickring.com/webring?from=yourdomain.com&amp;to=prev"&gt;← Prev&lt;/a&gt; |
+        <div class="code-block">
+            <button class="copy-btn" title="Copy to clipboard"><i class="fa-solid fa-copy"></i></button>
+            <pre><code>&lt;a href="https://yellowbrickring.com/webring?from=yourdomain.com&amp;to=prev"&gt;← Prev&lt;/a&gt; |
 &lt;strong&gt;Part of &lt;a href="https://yellowbrickring.com"&gt;Yellow Brick Ring&lt;/a&gt;&lt;/strong&gt; |
 &lt;a href="https://yellowbrickring.com/webring?from=yourdomain.com&amp;to=next"&gt;Next →&lt;/a&gt; |
 &lt;a href="https://yellowbrickring.com/webring?from=yourdomain.com&amp;to=random"&gt;🎲 Random&lt;/a&gt;</code></pre>
+        </div>
 
         <p>Replace <code>yourdomain.com</code> with your actual site ID (usually your domain name). These links allow
             your visitors to move around the ring even if JavaScript is disabled.</p>
     </section>
-
 
     <section>
         <h2>🌐 Browse the Ring</h2>
@@ -77,17 +83,18 @@
     </section>
 
     <section>
-    <h2>💬 Join the Conversation</h2>
-    <p>
-        Have questions, need help, or just want to chat? Come hang out with us on Discord!
-        It’s the best place to get support and connect with other folks in the ring.
-    </p>
-    <a href="https://buddypond.com/discord" class="btn" target="_blank" rel="noopener">Join Our Discord</a>
+        <h2>💬 Join the Conversation</h2>
+        <p>
+            Have questions, need help, or just want to chat? Come hang out with us on Discord!
+            It’s the best place to get support and connect with other folks in the ring.
+        </p>
+        <a href="https://buddypond.com/discord" class="btn" target="_blank" rel="noopener">Join Our Discord</a>
     </section>
 
 
     <footer>
-        <p>Built with 🌻 by friends of the web | <a href="/sites.json">Browse Sites</a> | <a href="https://github.com/marak/yellowbrickring.com">Open-source</a></p>
+        <p>Built with 🌻 by friends of the web | <a href="/sites.json">Browse Sites</a> | <a
+                href="https://github.com/marak/yellowbrickring.com">Open-source</a></p>
     </footer>
 
     <script type="module">
@@ -108,7 +115,20 @@
     </script>
 
     <ul id="site-list"></ul>
-
+    <script>
+        // when document is ready, load the sites
+        document.addEventListener('DOMContentLoaded', async () => {
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const code = button.nextElementSibling.querySelector('code').innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        button.innerHTML = '<i class="fa-solid fa-check"></i>';
+                        setTimeout(() => button.innerHTML = '<i class="fa-solid fa-copy"></i>', 1500);
+                    });
+                });
+            });
+        });
+    </script>
 
 </body>
 

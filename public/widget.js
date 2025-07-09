@@ -8,6 +8,7 @@
     async connectedCallback() {
       const siteId = this.getAttribute('site-id')
       const sizeAttr = this.getAttribute('size') // "compact", "full", or null
+      const openNewTab = this.getAttribute('open-new-tab') !== 'false'
       const apiUrl = window.yellowBrickRingApiUrl || 'https://yellowbrickring.com'
 
       if (!siteId) {
@@ -23,7 +24,7 @@
           ? 'full'
           : 'auto' // default (responsive)
 
-        this.shadowRoot.innerHTML = this.templateHTML({ apiUrl, siteId, randomUrl, modeClass })
+        this.shadowRoot.innerHTML = this.templateHTML({ apiUrl, siteId, randomUrl, modeClass, openNewTab })
 
       } catch (err) {
         console.error('[YellowBrickRing Widget]', err)
@@ -31,7 +32,8 @@
       }
     }
 
-    templateHTML({ apiUrl, siteId, randomUrl, modeClass }) {
+    templateHTML({ apiUrl, siteId, randomUrl, modeClass, openNewTab }) {
+      const targetAttr = openNewTab ? `target="_blank" rel="noopener"` : ''
       return `
         <style>
           .webring {
@@ -77,13 +79,13 @@
           }
         </style>
         <div class="webring ${modeClass}">
-          <a href="${apiUrl}/webring?from=${siteId}&to=prev">← Prev</a>
+          <a href="${apiUrl}/webring?from=${siteId}&to=prev" ${targetAttr}>← Prev</a>
           <span class="divider">|</span>
-          <span class="full-label">Part of <strong><a href="${apiUrl}">Yellow Brick Ring</a></strong></span>
+          <span class="full-label">Part of <strong><a href="${apiUrl}" ${targetAttr}>Yellow Brick Ring</a></strong></span>
           <span class="divider">|</span>
-          <a href="${apiUrl}/webring?from=${siteId}&to=next">Next →</a>
+          <a href="${apiUrl}/webring?from=${siteId}&to=next" ${targetAttr}>Next →</a>
           <span class="divider">|</span>
-          <a href="${randomUrl}">🎲 Random</a>
+          <a href="${randomUrl}" ${targetAttr}>🎲 Random</a>
         </div>
       `
     }
