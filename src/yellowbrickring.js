@@ -19,7 +19,7 @@ app.get('/', (c) => {
 // JSON endpoint of site data
 app.get('/sites.json', async (c) => {
 	const db = c.env.YELLOWBRICKRING_DB
-	const { results } = await db.prepare('SELECT * FROM sites ORDER BY created_at ASC').all()
+	const { results } = await db.prepare('SELECT * FROM sites ORDER BY order_index ASC, created_at ASC').all()
 	return c.json(results)
 });
 
@@ -195,7 +195,7 @@ async function logNavigation(type, from, to, c) {
 async function getSiteList(c) {
 	const db = c.env.YELLOWBRICKRING_DB
 	const { results } = await db.prepare(`
-    SELECT * FROM sites ORDER BY created_at ASC
+	SELECT * FROM sites ORDER BY order_index ASC, created_at ASC;
   `).all()
 	return results
 }
