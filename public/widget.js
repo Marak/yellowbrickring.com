@@ -16,16 +16,6 @@
       }
 
       try {
-        const res = await fetch(`${apiUrl}/sites.json`)
-        if (!res.ok) throw new Error('Failed to fetch site list')
-        const sites = await res.json()
-
-        const index = sites.findIndex(s => s.id === siteId)
-        if (index === -1) {
-          this.renderError(`Site ID "${siteId}" not found in the ring.`)
-          return
-        }
-
         const randomUrl = `${apiUrl}/webring?from=${siteId}&to=random`
         const modeClass = sizeAttr === 'compact'
           ? 'compact'

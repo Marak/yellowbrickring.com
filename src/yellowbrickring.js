@@ -24,17 +24,20 @@ app.get('/sites.json', async (c) => {
 });
 
 // webring?from=codyq.dev&to=next
-
 // Redirect to next site
 app.get('/next/:id', async (c) => {
 	const sites = await getSiteList(c)
 	const { id } = c.req.param()
 	const index = findIndex(sites, id)
 
-	if (index === -1) return c.text('Site not found', 404)
+	const fallbackIndex = 0
+	const fromId = index !== -1 ? id : null
+	const next = sites[(index !== -1 ? index + 1 : fallbackIndex + 1) % sites.length]
 
-	const next = sites[(index + 1) % sites.length]
-	await logNavigation('next', id, next.id, c)
+	if (fromId) {
+		await logNavigation('next', fromId, next.id, c)
+	}
+
 	return c.redirect(next.url)
 })
 
@@ -44,52 +47,58 @@ app.get('/prev/:id', async (c) => {
 	const { id } = c.req.param()
 	const index = findIndex(sites, id)
 
-	if (index === -1) return c.text('Site not found', 404)
+	const fallbackIndex = 0
+	const fromId = index !== -1 ? id : null
+	const prev = sites[(index !== -1 ? index - 1 + sites.length : fallbackIndex - 1 + sites.length) % sites.length]
 
-	const prev = sites[(index - 1 + sites.length) % sites.length]
-	await logNavigation('prev', id, prev.id, c)
+	if (fromId) {
+		await logNavigation('prev', fromId, prev.id, c)
+	}
+
 	return c.redirect(prev.url)
 })
 
 // Redirect to random site, excluding the originating site based on Origin/Referer
 app.get('/random', async (c) => {
-  const sites = await getSiteList(c)
-  if (sites.length === 0) return c.text('No sites available', 404)
+	const sites = await getSiteList(c)
+	if (sites.length === 0) return c.text('No sites available', 404)
 
-  let fromId = null
-  let availableSites = sites
+	let fromId = null
+	let availableSites = sites
 
-  // Try to get the origin from Origin or Referer header
-  const originHeader = c.req.header('Origin') || c.req.header('Referer')
-  if (originHeader) {
-    try {
-      // Parse the URL to extract the hostname
-      const originUrl = new URL(originHeader)
-      const originDomain = originUrl.hostname
-      // Find the site in the database that matches the domain
-      const originSite = sites.find(site => {
-        try {
-          const siteUrl = new URL(site.url)
-          return siteUrl.hostname === originDomain
-        } catch {
-          return false
-        }
-      })
-      if (originSite) {
-        fromId = originSite.id
-        // Exclude the originating site
-        availableSites = sites.filter(site => site.id !== fromId)
-        if (availableSites.length === 0) return c.text('No other sites available', 404)
-      }
-    } catch (e) {
-      console.warn('[Error parsing Origin/Referer]', e)
-    }
-  }
+	const originHeader = c.req.header('Origin') || c.req.header('Referer')
+	if (originHeader) {
+		try {
+			const originUrl = new URL(originHeader)
+			const originDomain = originUrl.hostname
 
-  const site = availableSites[Math.floor(Math.random() * availableSites.length)]
-  await logNavigation('random', fromId || null, site.id, c)
-  return c.redirect(site.url)
+			const originSite = sites.find(site => {
+				try {
+					const siteUrl = new URL(site.url)
+					return siteUrl.hostname === originDomain
+				} catch {
+					return false
+				}
+			})
+
+			if (originSite) {
+				fromId = originSite.id
+				availableSites = sites.filter(site => site.id !== fromId)
+				if (availableSites.length === 0) return c.text('No other sites available', 404)
+			}
+		} catch (e) {
+			console.warn('[Error parsing Origin/Referer]', e)
+		}
+	}
+
+	const site = availableSites[Math.floor(Math.random() * availableSites.length)]
+	if (fromId) {
+		await logNavigation('random', fromId, site.id, c)
+	}
+
+	return c.redirect(site.url)
 })
+
 
 app.get('/webring', async (c) => {
 	const sites = await getSiteList(c)
@@ -97,19 +106,27 @@ app.get('/webring', async (c) => {
 	const to = c.req.query('to') || 'next'
 
 	const index = findIndex(sites, from)
-	if (index === -1 && to !== 'random') return c.text('Site not found', 404)
+	const fromIsValid = index !== -1
 
 	let target
 
 	if (to === 'next') {
-		target = sites[(index + 1) % sites.length]
-		await logNavigation('next', from, target.id, c)
+		const startIndex = fromIsValid ? index : 0
+		target = sites[(startIndex + 1) % sites.length]
+		if (fromIsValid) {
+			await logNavigation('next', from, target.id, c)
+		}
 	} else if (to === 'prev') {
-		target = sites[(index - 1 + sites.length) % sites.length]
-		await logNavigation('prev', from, target.id, c)
+		const startIndex = fromIsValid ? index : 0
+		target = sites[(startIndex - 1 + sites.length) % sites.length]
+		if (fromIsValid) {
+			await logNavigation('prev', from, target.id, c)
+		}
 	} else if (to === 'random') {
 		target = sites[Math.floor(Math.random() * sites.length)]
-		await logNavigation('random', from, target.id, c)
+		if (fromIsValid) {
+			await logNavigation('random', from, target.id, c)
+		}
 	} else {
 		return c.text('Invalid navigation direction', 400)
 	}
@@ -122,6 +139,10 @@ app.post('/submit-site', async (c) => {
 	const db = c.env.YELLOWBRICKRING_DB
 	const ip = c.req.header('cf-connecting-ip') || 'unknown'
 	const { domain, name, url } = await c.req.json()
+
+	if (!domain || !name || !url || !url.startsWith('http')) {
+		return c.text('Invalid submission data', 400)
+	}
 
 	console.log(`Received submission from IP: ${ip}, ID: ${domain}, Name: ${name}, URL: ${url}`)
 

@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Webring Widget Example</title>
-  <link rel="stylesheet" href="./styles.css" />
-  <script src="./widget.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webring Widget Example</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script>
+        // check if origin is not yellowbrickring.com, if so set window.yellowBrickRingApiUrl to origin
+        if (window.location.origin !== 'https://yellowbrickring.com') {
+            window.yellowBrickRingApiUrl = window.location.origin;
+        }
+    </script>
+    <script src="./widget.js" defer></script>
 </head>
+
 <body>
-  <webring-widget site-id="yellowbrickring.com"></webring-widget>
+    <webring-widget site-id="yellowbrickring.com"></webring-widget>
 </body>
+
 </html>
